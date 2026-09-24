@@ -22,8 +22,9 @@ from sqlalchemy.orm import Session
 from app.db import get_db
 from app.schemas import PatientCreate, PatientUpdate, normalize_phone
 from app.services import patients as service
+from app.security import verify_vapi_secret
 
-router = APIRouter(prefix="/vapi", tags=["voice"])
+router = APIRouter(prefix="/vapi", tags=["voice"], dependencies=[Depends(verify_vapi_secret)])
 logger = logging.getLogger("vapi")
 
 
@@ -188,3 +189,30 @@ def handle_tool_calls(body: dict = Body(default={}), db: Session = Depends(get_d
         # Vapi wants a single-line string.
         results.append({"toolCallId": call.get("id"), "result": " ".join(str(result).split())})
     return {"results": results}
+
+@router.post("/events")
+def handle_events(body: dict = Body(default={})):
+    """
+    Receives Vapi's informational server messages (no reply needed).
+    - status-update: fires when a call starts. It also wakes a sleeping free-tier host.
+    - end-of-call-report: logs why the call ended plus summary and transcript,
+      so a dropped call is visible even though nothing was saved.
+    """
+    message = body.get("message") or {}
+    kind = message.get("type")
+    call_id = (message.get("call") or {}).get("id")
+
+    if kind == "status-update":
+        logger.info("CALL %s status=%s", call_id, message.get("status"))
+    elif kind == "end-of-call-report":
+        artifact = message.get("artifact") or {}
+        analysis = message.get("analysis") or {}
+        transcript = artifact.get("transcript") or message.get("transcript") or ""
+        summary = analysis.get("summary") or message.get("summary") or ""
+        logger.info(
+            "CALL %s ENDED reason=%s duration=%ss",
+            call_id, message.get("endedReason"), message.get("durationSeconds"),
+        )
+        logger.info("CALL %s SUMMARY: %s", call_id, summary)
+        logger.info("CALL %s TRANSCRIPT: %s", call_id, " | ".join(str(transcript).splitlines()))
+    return {}    
