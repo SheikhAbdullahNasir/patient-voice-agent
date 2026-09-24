@@ -6,7 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from app.routes import patients, vapi
+from app.routes import dashboard, patients, vapi
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("app")
@@ -14,6 +14,7 @@ logger = logging.getLogger("app")
 app = FastAPI(title="Patient Registration API")
 app.include_router(patients.router)
 app.include_router(vapi.router)
+app.include_router(dashboard.router)
 
 
 def error_response(status: int, message: str, fields: list | None = None) -> JSONResponse:
