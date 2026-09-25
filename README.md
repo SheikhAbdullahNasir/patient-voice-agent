@@ -45,7 +45,7 @@ I tried three hosting options for the API, in this order:
    accepted option ("ngrok over cloud deploy" is named as an example of a smart trade-off,
    and ngrok is listed among the suggested hosting options).
 
-Given the 3-hour time constraint, I chose to invest further debugging time in the voice
+Given the constraint, I chose to invest further debugging time in the voice
 agent's conversation quality, error handling, and test coverage rather than continuing to
 troubleshoot a third hosting provider. **A working, fully tested system on ngrok scores
 better than more time spent on an unreliable cloud deployment.**
