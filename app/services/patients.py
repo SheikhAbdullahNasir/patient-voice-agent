@@ -1,7 +1,7 @@
 """
 Data layer: all database actions for patients.
 
-Both the REST routes and (later) the voice-agent tools call these functions,
+Both the REST routes and the voice-agent tools call these functions,
 so there is exactly one place where patients are created or changed.
 """
 import logging

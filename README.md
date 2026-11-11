@@ -5,7 +5,7 @@ a real phone number, talks to the agent, and their record appears in a REST API 
 dashboard as soon as they confirm. If they call back from the same number, the agent recognises
 them and offers to update their existing record instead of creating a duplicate.
 
-A live demo call can be arranged on request (see Contact below).
+A live demo call is available on request.
 
 ## Why this project is interesting
 
@@ -118,7 +118,7 @@ Interactive API docs are served at `/docs` and the dashboard at `/dashboard`.
 ### Vapi setup
 1. Create the three Function tools (`lookup_patient`, `save_patient`, `update_patient`) pointing to `/vapi/tools`, plus an End Call tool.
 2. Create a Bearer Token credential holding `VAPI_SECRET` and attach it to the tools.
-3. Create the assistant using the prompt and first message from `prompts/system_prompt.md`.
+3. Create the assistant using the prompt from `prompts/system_prompt.md`, and set its first message, e.g. *"Hi, thanks for calling Riverside Clinic. This is Maya, and I'll help you get registered today. Could I start with your first and last name?"*
 4. Set the assistant server URL to `/vapi/events` with the `status-update` and `end-of-call-report` messages.
 5. Attach a Vapi phone number to the assistant.
 

@@ -120,7 +120,7 @@ def tool_save_patient(db: Session, args: dict) -> str:
             "caller and offer to try saving again."
         )
 
-    # Observability: log the final collected payload (required by the assignment).
+    # Observability: log the final saved payload.
     logger.info("FINAL PAYLOAD: %s", json.dumps(payload.model_dump(mode="json")))
     return (
         f"Saved successfully. patient_id={patient.patient_id}. "
